@@ -1,9 +1,21 @@
 <script setup>
-	const date = new Date();
+import Button from './components/Button.vue'
 </script>
 
 <template>
-	<time>{{ date }}</time>
+	<main class="main">
+		<Button>
+			<template #icon> + </template>
+			<template #text>Сохранить</template>
+		</Button>
+	</main>
 </template>
 
-<style scoped></style>
+<style scoped>
+	.main {
+		padding: 60px 50px;
+
+		background-color: var(--color-bg-main);
+		border-radius: 25px;
+	}
+</style>
