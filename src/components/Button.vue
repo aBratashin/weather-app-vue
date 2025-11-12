@@ -10,7 +10,10 @@
 .button {
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	gap: 9px;
+	height: 53px;
+	width: 100%;
 	padding: 14px;
 
 	color: var(--color-primary);

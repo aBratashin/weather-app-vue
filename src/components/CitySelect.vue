@@ -1,39 +1,46 @@
 <script setup>
 import Button from './Button.vue'
 import IconLocation from '../icons/IconLocation.vue'
+import { ref } from 'vue'
+import Input from './Input.vue'
 
 const emit = defineEmits({
-	selectCity: (city) => city
+	selectCity: city => city
 })
 
+const city = ref('Moscow')
+const isEdited = ref(false)
+
 const select = () => {
-	emit('selectCity', 'London')
+	isEdited.value = false
+	emit('selectCity', city.value)
 }
 
+const edit = () => {
+	isEdited.value = true
+}
 </script>
 
 <template>
-	<Button @click="select">
-		<IconLocation />
-		Изменить город
-	</Button>
-
-	<div>
-		<input class="input" type="text" placeholder="Введите город" />
-		<Button>Сохранить</Button>
+	<div class="city-select">
+		<div v-if="isEdited" class="cityInput">
+			<Input v-model="city" type="text" placeholder="Введите город" />
+			<Button @click="select">Сохранить</Button>
+		</div>
+		<Button v-else @click="edit">
+			<IconLocation />
+			Изменить город
+		</Button>
 	</div>
 </template>
 
 <style scoped>
-.input {
-	padding: 15px 18px;
+.city-select {
+	width: 420px;
+}
 
-	color: #3f4958;
-	font-size: 18px;
-
-	background-color: var(--color-bg-card);
-	border: none;
-	outline: none;
-	border-radius: 10px;
+.cityInput {
+	display: flex;
+	gap: 12px;
 }
 </style>

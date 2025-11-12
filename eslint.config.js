@@ -11,13 +11,16 @@ export default [
 		languageOptions: {
 			ecmaVersion: 'latest',
 			sourceType: 'module',
+			globals: {
+				window: 'readonly',
+				document: 'readonly',
+				navigator: 'readonly',
+				console: 'readonly',
+			}
 		},
 		rules: {
 			'vue/multi-word-component-names': 'off',
 			'vue/require-default-prop': 'off'
-		},
-		env: {
-			browser: true,
 		}
 	}
 ]

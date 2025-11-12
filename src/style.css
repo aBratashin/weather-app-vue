@@ -3,6 +3,7 @@
   --color-primary-inverted: #000000;
 
   --color-bg: #343D4B;
+  --color-text-placeholder: #3f4958;
   --color-bg-main: #222831;
   --color-bg-card: #272E37;
 
@@ -24,9 +25,9 @@ body {
   padding: 0;
 
   color: var(--color-primary);
-  background-color: var(--color-bg);
   font-family: var(--font);
 
+  background-color: var(--color-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
