@@ -16,6 +16,8 @@ export default [
 				document: 'readonly',
 				navigator: 'readonly',
 				console: 'readonly',
+				fetch: 'readonly',
+				URLSearchParams: 'readonly'
 			}
 		},
 		rules: {
