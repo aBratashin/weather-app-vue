@@ -1,43 +1,30 @@
 <script setup>
-import Stat from './components/Stat.vue'
-import CitySelect from './components/CitySelect.vue'
-import { computed, ref } from 'vue'
-import Error from './components/Error.vue'
-import DayCard from './components/DayCard.vue'
+import { onMounted, provide, ref, watch } from 'vue'
+import PaneRight from './components/PaneRight.vue'
+import { API_ENDPOINT, cityProvide } from './constants.js'
+import PaneLeft from './components/PaneLeft.vue'
 
-const API_ENDPOINT = 'https://api.weatherapi.com/v1'
-
-const errorMap = new Map([[1006, 'Указанный город не найден']])
-
+const apiKey = import.meta.env.VITE_WEATHER_API_KEY
 const data = ref()
 const error = ref()
+const activeIndex = ref(0)
+const city = ref('Москва')
 
-const errorDisplay = computed(() => {
-	return errorMap.get(error?.value?.error?.code)
+provide(cityProvide, city)
+
+watch(city, () => {
+	getCity(city.value)
 })
 
-const dataModified = computed(() => {
-	return [
-		{
-			label: 'Влажность',
-			stat: data.value?.current?.humidity + ' %'
-		},
-		{
-			label: 'Облачность',
-			stat: data.value?.current?.cloud + ' %'
-		},
-		{
-			label: 'Ветер',
-			stat: data.value?.current?.wind_kph + ' км/ч'
-		}
-	]
+onMounted(() => {
+	getCity(city.value)
 })
 
 async function getCity(city) {
 	const params = new URLSearchParams({
 		q: city,
 		lang: 'ru',
-		key: '878b492923b34390a9e153047251211',
+		key: apiKey,
 		days: 4
 	})
 
@@ -56,48 +43,49 @@ async function getCity(city) {
 
 <template>
 	<main class="main">
-		<Error :error="errorDisplay" />
-		<div class="stat-data">
-			<div class="stat-list">
-				<Stat v-for="item in dataModified" :key="item.label" v-bind="item" />
-			</div>
-			<div v-if="data" class="day-card-list">
-				<DayCard
-					v-for="item in data?.forecast?.forecastday"
-					:key="item.date"
-					:date="new Date(item.date)"
-					:temp="item.day.avgtemp_c"
-					:weather-code="item.day.condition.code"
-				/>
-			</div>
+		<div class="left">
+			<PaneLeft
+				v-if="data"
+				:day-data="data.forecast.forecastday[activeIndex]"
+			/>
 		</div>
-		<CitySelect @select-city="getCity" />
+		<div class="right">
+			<PaneRight
+				:active-index="activeIndex"
+				:data="data"
+				:error="error"
+				@select-index="i => (activeIndex = i)"
+			/>
+		</div>
 	</main>
 </template>
 
 <style scoped>
 .main {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.left {
+	width: 500px;
+	height: 680px;
+
+	border-radius: 30px;
+	background-image: url('/public/bg.png');
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.right {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 600px;
+	height: 623px;
 	padding: 60px 50px;
 
 	background-color: var(--color-bg-main);
-	border-radius: 25px;
-}
-
-.day-card-list {
-	display: flex;
-	gap: 1px;
-}
-
-.stat-data {
-	display: flex;
-	flex-direction: column;
-	gap: 70px;
-	margin-bottom: 70px;
-}
-
-.stat-list {
-	display: flex;
-	flex-direction: column;
-	gap: 16px;
+	border-radius: 0 25px 25px 0;
 }
 </style>
